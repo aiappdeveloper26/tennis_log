@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tennis Progress Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f7f3;--surface:#ffffff;--ink:#0f3d26;--muted:#4f6b5a;--line:#cfe0d4;--ball:#d4e82a;--ballink:#2a3300;--accent:#1f7a4a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a2017;--surface:#11301f;--ink:#eaf5ee;--muted:#9bb8a6;--line:#24503b;--ball:#d4e82a;--ballink:#2a3300;--accent:#6fd49b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a2017;--surface:#11301f;--ink:#eaf5ee;--muted:#9bb8a6;--line:#24503b;--accent:#6fd49b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:880px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.02em;margin:0 0 4px;line-height:1.05}
+h2{font-size:1.25rem;font-weight:800;margin:0 0 12px}
+.sub{color:var(--muted);margin:0 0 24px}
+section{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:14px;padding:18px;margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stat{background:var(--ink);color:var(--bg);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:2rem;font-weight:800;line-height:1}
+.stat span{font-size:.85rem;opacity:.8}
+.stat:first-child{background:var(--ball);color:var(--ballink)}
+label{display:block;font-weight:600;font-size:.9rem;margin-bottom:4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:14px}
+.rate{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.rate:first-of-type{border-top:0}
+.dots{display:flex;gap:6px}
+.dots button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.dots button[aria-pressed="true"]{background:var(--ball);border-color:var(--ball);color:var(--ballink)}
+.hint{color:var(--muted);font-size:.85rem;margin:0 0 8px}
+.primary{margin-top:14px;font:inherit;font-weight:800;background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:12px 26px;cursor:pointer}
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.skill{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg)}
+.skill .top{display:flex;justify-content:space-between;align-items:baseline}
+.skill strong{font-size:1.05rem}
+.lvl{font-weight:800;font-size:1.4rem}
+.delta{font-size:.85rem;color:var(--muted)}
+svg.spark{width:100%;height:36px;margin-top:6px;overflow:visible}
+.sess{border-top:1px solid var(--line);padding:12px 0}
+.sess:first-of-type{border-top:0}
+.sess header{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tag{display:inline-block;background:var(--ball);color:var(--ballink);border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:600;margin-right:6px}
+.chips{margin-top:6px;color:var(--muted);font-size:.85rem}
+.sess p{margin:6px 0 0;white-space:pre-wrap}
+.del{background:none;border:0;color:var(--muted);cursor:pointer;font:inherit;text-decoration:underline}
+.cnt{display:flex;align-items:center;gap:8px;white-space:nowrap}.cnt input{width:70px}.pm{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-weight:800;cursor:pointer}.n{min-width:24px;text-align:center;font-size:1.1rem}.reminder{background:var(--ball);color:var(--ballink);border-radius:10px;padding:8px 12px}#focus p{margin:0 0 10px}.cnt{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.cnt input{width:68px}.reminder{background:var(--ball);color:var(--ballink);border-radius:10px;padding:8px 12px}#focus p{margin:0 0 10px}
+.test{border-top:1px solid var(--line);padding:10px 0}.test:first-of-type{border-top:0}.test .line{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.miss{margin-top:6px;font-size:.85rem;color:var(--muted)}.miss input{width:56px;padding:5px 8px}
+.ghost{font:inherit;font-weight:600;background:none;color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer;margin:12px 8px 0 0}
+.weeks{display:flex;align-items:flex-end;gap:8px;height:110px}.weeks div{flex:1;text-align:center;font-size:.75rem;color:var(--muted)}.weeks i{display:block;background:var(--ball);border-radius:6px 6px 0 0;min-height:3px;margin:0 auto 4px;width:100%}
+.skill svg{width:100%;height:auto;margin-top:6px}.skill .drill{font-size:.85rem;margin-top:6px}
+a{color:var(--accent)}.msg{color:var(--muted);font-size:.9rem}textarea.bk{font-size:.8rem;font-family:ui-monospace,Menlo,monospace}
+.chips2{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.cp{font:inherit;font-weight:600;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}.cp[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.bigs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}.big{font:inherit;font-weight:800;font-size:1.3rem;padding:22px 6px;border-radius:16px;border:2px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;touch-action:manipulation}.big:active{transform:scale(.96)}.big.in{grid-column:1/-1;background:var(--ball);border-color:var(--ball);color:var(--ballink);font-size:1.8rem;padding:30px 6px}
+.live{font-size:1.1rem;margin:0 0 4px}
+.hero{position:relative;background:linear-gradient(135deg,#1a6b42,#12503a);color:#fff;border-radius:18px;padding:28px 22px;margin-bottom:18px;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.hero::before{content:"";position:absolute;inset:10px;border:2px solid rgba(255,255,255,.55);border-radius:8px;pointer-events:none}
+.hero::after{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:2px;background:rgba(255,255,255,.18);pointer-events:none}
+.hero>*{position:relative;z-index:1}.hero h1{color:#fff}.hero .sub{color:#dff1e5;margin:0}.ball{width:56px;height:56px;flex:none}.empty{color:var(--muted);margin:0}
+</style>
+</head>
+<body>
+<main>
+<header class="hero"><div><h1>Tennis progress log</h1>
+<p class="sub">Count what happens on court. The numbers show what to fix next.</p></div>
+<svg class="ball" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#d4e82a"/><path d="M6 12c10 6 10 18 0 24M42 12c-10 6-10 18 0 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></header>
+<section id="focus"></section>
+<div class="stats" id="stats"></div>
+<section id="court">
+<h2>Court mode</h2>
+<p class="hint">Use this while you hit. Pick the skill you are drilling, then tap one button after every ball. It takes about a second per ball.</p>
+<div class="chips2" id="chips"></div>
+<p class="live" id="livecount"></p>
+<div class="bigs">
+<button type="button" class="big in" data-o="in">In</button>
+<button type="button" class="big" data-o="net">Net</button>
+<button type="button" class="big" data-o="long">Long</button>
+<button type="button" class="big" data-o="wide">Wide</button>
+</div>
+<button class="ghost" id="lundo" style="margin-top:0">Undo last ball</button><button class="ghost" id="lclr" style="margin-top:0">Clear counts</button>
+<button class="primary" id="lfin">Done: copy counts to the log</button>
+<p class="msg" id="livemsg">Counts are saved on this device, so you can lock your phone between drills.</p>
+</section>
+<section id="form">
+<h2 id="ftitle">Log a session</h2>
+<div class="row">
+<div><label for="date">Date</label><input type="date" id="date"></div>
+<div><label for="mins">Minutes played</label><input type="number" id="mins" min="5" step="5" value="60"></div>
+<div><label for="type">Session type</label><select id="type"><option>Lesson</option><option>Drills</option><option>Practice match</option><option>Match</option><option>Ball machine</option><option>Serve practice</option></select></div>
+</div>
+<label>1. Run mini tests (skip any you didn’t do)</label>
+<p class="hint">Hit the set number of balls, count how many landed in, then split the misses by type. 20 balls gives steadier numbers than 10. Count right after the drill, not mid-point.</p>
+<div id="tests"></div>
+<div class="rate"><span><strong>Longest rally</strong><br><span class="hint">Most shots in a row without an error</span></span><input type="number" id="longest" min="0" style="width:90px" placeholder="0"></div>
+<div style="margin-top:14px"><label for="fix">2. One thing to fix next time</label>
+<input id="fix" placeholder="e.g. Toss too low on serve, finish swing high on forehand"></div>
+<div style="margin-top:10px"><label for="coach">Coach feedback or video link</label><textarea id="coach" rows="2" placeholder="What your coach said, or paste a video link"></textarea></div>
+<div style="margin-top:10px"><label for="notes">Other notes</label><textarea id="notes" rows="2" placeholder="Match result, how your body felt, what clicked"></textarea></div>
+<button class="primary" id="save">Save session</button><button class="ghost" id="cancel" hidden>Cancel edit</button>
+<p class="msg" id="draftmsg"></p>
+</section>
+<section><h2>Progress by skill</h2><p class="hint">The big number is your last 3 tests combined, which smooths out lucky or unlucky days. The dashed line is your target.</p><div class="skills" id="skills"></div></section>
+<section><h2>Your targets</h2><p class="hint">Set the % you want to reach for each skill. Change them as you improve.</p><div class="row" id="targets"></div></section>
+<section><h2>How often you play</h2><p class="hint">Sessions per week, last 8 weeks.</p><div class="weeks" id="weeks"></div></section>
+<section><h2>Session history</h2><div id="hist"></div></section>
+<section><h2>Back up your data</h2>
+<p class="hint">Your log is saved in this browser only. Copy the backup text and keep it in your notes or email. To restore on another device, paste it below and press Restore.</p>
+<textarea class="bk" id="bk" rows="3" placeholder="Backup text appears here, or paste a backup to restore"></textarea>
+<button class="ghost" id="exp">Copy backup</button><button class="ghost" id="imp">Restore from backup</button><span class="msg" id="bkmsg"></span>
+</section>
+</main>
+<script>
+var T=[
+{k:"Serve1",l:"First serve",how:"Hit 20 first serves into the box, alternating deuce and ad sides",t:60,drill:"Serve 10 to each box aiming at the T, then the wide corner. Stop at 3 misses in a row and reset your toss."},
+{k:"Serve2",l:"Second serve",how:"Hit 20 second serves with spin",t:85,drill:"Serve 20 second serves with topspin and a higher net clearance, counting only balls that land in."},
+{k:"Forehand",l:"Forehand cross-court",how:"Rally 20 forehands cross-court (partner or feeder)",t:70,drill:"Cross-court rally to a cone 2 m inside the baseline. Try for 10 in a row, then repeat."},
+{k:"Backhand",l:"Backhand cross-court",how:"Rally 20 backhands cross-court",t:60,drill:"Same cross-court target drill as the forehand, and slow down the swing to keep it in."},
+{k:"Return",l:"Return of serve",how:"Return 20 serves, count the ones landing in court",t:65,drill:"Have a partner serve 20. Shorten your backswing and just get the ball deep to the middle."},
+{k:"Volley",l:"Volley",how:"Hit 20 volleys fed to you at the net",t:60,drill:"Stand at the service line, partner feeds easy balls. Punch with a firm wrist, no big swing."}];
+var E=[["net","Net"],["long","Long"],["wide","Wide"]];
+var TIPS={net:"Your misses go mostly into the net: aim higher over the net, bend your knees, and finish the swing up.",long:"Your misses go mostly long: add topspin, swing a bit slower, and aim about a metre inside the baseline.",wide:"Your misses go mostly wide: make contact slightly in front of your body and finish toward your target."};
+var KEY="tennis-progress-v2",TK="tennis-targets-v1",DK="tennis-draft-v1";
+var sessions=[],targets={},editing=null;
+function ld(k,d){try{var r=localStorage.getItem(k);return r?JSON.parse(r):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+sessions=ld(KEY,[]);if(!Array.isArray(sessions))sessions=[];
+sessions.forEach(function(s){if(s.tests&&s.tests.Serve){s.tests.Serve1=s.tests.Serve;delete s.tests.Serve}});
+targets=ld(TK,{});T.forEach(function(t){if(typeof targets[t.k]!=="number")targets[t.k]=t.t});
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function link(s){return esc(s).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')}
+function today(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+function sorted(){return sessions.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id})}
+function num(id){var v=$(id).value;return v===""?0:parseInt(v,10)||0}
+function buildTests(){
+  $("tests").innerHTML=T.map(function(t){return '<div class="test"><div class="line"><span><strong>'+t.l+'</strong><br><span class="hint">'+t.how+'</span></span><span class="cnt"><input type="number" min="0" id="in_'+t.k+'" placeholder="in" aria-label="'+t.l+' balls in"> out of <input type="number" min="1" id="out_'+t.k+'" value="20" aria-label="'+t.l+' balls hit"></span></div><div class="miss">Misses: '+E.map(function(e){return e[1]+' <input type="number" min="0" id="'+e[0]+'_'+t.k+'" aria-label="'+t.l+' '+e[1]+' misses"> '}).join("")+'</div></div>'}).join("");
+}
+function saveDraft(){if(editing)return;var o={};$("form").querySelectorAll("input,select,textarea").forEach(function(el){if(el.id)o[el.id]=el.value});sv(DK,o);$("draftmsg").textContent="Draft saved on this device."}
+function loadDraft(){var o=ld(DK,null);if(!o)return;Object.keys(o).forEach(function(id){var el=$(id);if(el)el.value=o[id]})}
+function clearForm(){editing=null;sv(DK,{});buildTests();["longest","fix","coach","notes"].forEach(function(i){$(i).value=""});$("date").value=today();$("mins").value=60;$("ftitle").textContent="Log a session";$("save").textContent="Save session";$("cancel").hidden=true;$("draftmsg").textContent=""}
+function recent(k,all,n){var r=[];for(var i=all.length-1;i>=0&&r.length<n;i--){var x=all[i].tests&&all[i].tests[k];if(x&&x.out>0)r.push(x)}return r}
+function smooth(k,all){var r=recent(k,all,3);if(!r.length)return null;var a=0,o=0;r.forEach(function(x){a+=x.in;o+=x.out});return{p:Math.round(100*a/o),balls:o,r:r}}
+function chart(k,all){
+  var pts=[];all.forEach(function(s){var x=s.tests&&s.tests[k];if(x&&x.out>0)pts.push({d:s.date,p:100*x.in/x.out})});pts=pts.slice(-12);
+  var w=260,h=96,L=30,B=16,n=pts.length;
+  function X(i){return n===1?(L+w)/2:L+i*(w-L-6)/(n-1)}
+  function Y(p){return 6+(100-p)*(h-B-6)/100}
+  var g=[0,50,100].map(function(v){return '<line x1="'+L+'" x2="'+w+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--line)"/><text x="0" y="'+(Y(v)+4)+'" font-size="10" fill="var(--muted)">'+v+'%</text>'}).join("");
+  var ty=Y(targets[k]);g+='<line x1="'+L+'" x2="'+w+'" y1="'+ty+'" y2="'+ty+'" stroke="var(--ink)" stroke-dasharray="4 3" opacity=".6"/>';
+  var d=pts.map(function(p,i){return (i?"L":"M")+X(i).toFixed(1)+" "+Y(p.p).toFixed(1)}).join(" ");
+  var c=pts.map(function(p,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.p).toFixed(1)+'" r="3.5" fill="var(--ink)"/>'}).join("");
+  var dl='<text x="'+L+'" y="'+(h-3)+'" font-size="10" fill="var(--muted)">'+pts[0].d.slice(5)+'</text>'+(n>1?'<text x="'+w+'" y="'+(h-3)+'" font-size="10" text-anchor="end" fill="var(--muted)">'+pts[n-1].d.slice(5)+'</text>':"");
+  return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+k+' trend">'+g+'<path d="'+d+'" fill="none" stroke="var(--accent)" stroke-width="2"/>'+c+dl+'</svg>';
+}
+function render(){
+  var all=sorted(),mins=all.reduce(function(a,s){return a+s.mins},0),best=0;all.forEach(function(s){if(s.longest>best)best=s.longest});
+  $("stats").innerHTML='<div class="stat"><b>'+all.length+'</b><span>sessions</span></div><div class="stat"><b>'+(mins/60).toFixed(1)+'</b><span>hours on court</span></div><div class="stat"><b>'+best+'</b><span>best rally (shots)</span></div>';
+  // focus
+  var rk=[];T.forEach(function(t){var m=smooth(t.k,all);if(m)rk.push({t:t,m:m,gap:m.p-targets[t.k]})});
+  rk.sort(function(a,b){return a.gap-b.gap});
+  var f='<h2>What to improve next</h2>';
+  if(!rk.length)f+='<p class="empty">Log a session with at least one mini test. This panel will then show which skill is furthest below your target.</p>';
+  else{
+    var w=rk[0];
+    if(w.gap>=0)f+='<p><strong>Every tested skill is at or above its target.</strong> Raise your targets below to keep progressing.</p>';
+    else{
+      f+='<p><strong>Furthest below target: '+w.t.l+'.</strong> You are at '+w.m.p+'% against a target of '+targets[w.t.k]+'%.</p>';
+      var tot={net:0,long:0,wide:0},sum=0;w.m.r.forEach(function(x){E.forEach(function(e){var v=(x.err&&x.err[e[0]])||0;tot[e[0]]+=v;sum+=v})});
+      if(sum>0){var top=E.map(function(e){return e[0]}).sort(function(a,b){return tot[b]-tot[a]})[0];f+='<p>'+TIPS[top]+'</p>'}
+      f+='<p><strong>Try this drill:</strong> '+esc(w.t.drill)+'</p>';
+    }
+    if(w.m.balls<40)f+='<p class="hint">This is based on only '+w.m.balls+' balls. Treat it as a hint until you have more tests.</p>';
+  }
+  var lf=all.slice().reverse().filter(function(s){return s.fix})[0];
+  if(lf)f+='<p class="reminder">Your note from '+esc(lf.date)+': <strong>'+esc(lf.fix)+'</strong></p>';
+  $("focus").innerHTML=f;
+  // skills
+  $("skills").innerHTML=T.map(function(t){
+    var m=smooth(t.k,all);
+    if(!m)return '<div class="skill"><div class="top"><strong>'+t.l+'</strong><span class="delta">No tests yet</span></div><div class="delta">Target '+targets[t.k]+'%</div></div>';
+    var ps=[];all.forEach(function(s){var x=s.tests&&s.tests[t.k];if(x&&x.out>0)ps.push(Math.round(100*x.in/x.out))});
+    var d=ps[ps.length-1]-ps[0],dt=ps.length<2?"First test":(d>0?"Up "+d+" points since your first test":d<0?"Down "+Math.abs(d)+" points since your first test":"Same as your first test");
+    return '<div class="skill"><div class="top"><strong>'+t.l+'</strong><span class="lvl">'+m.p+'%</span></div><div class="delta">'+dt+' · target '+targets[t.k]+'%</div>'+chart(t.k,all)+'</div>';
+  }).join("");
+  // targets
+  $("targets").innerHTML=T.map(function(t){return '<div><label for="tg_'+t.k+'">'+t.l+' target (%)</label><input type="number" min="1" max="100" id="tg_'+t.k+'" value="'+targets[t.k]+'"></div>'}).join("");
+  T.forEach(function(t){$("tg_"+t.k).onchange=function(){var v=parseInt(this.value,10);if(v>=1&&v<=100){targets[t.k]=v;sv(TK,targets);render()}}});
+  // weeks
+  var now=new Date(),wk=[];function mon(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+  var m0=mon(now);for(var i=7;i>=0;i--){var d=new Date(m0);d.setDate(d.getDate()-7*i);wk.push({d:d,c:0})}
+  all.forEach(function(s){var p=s.date.split("-"),sd=mon(new Date(+p[0],+p[1]-1,+p[2]));wk.forEach(function(x){if(x.d.getTime()===sd.getTime())x.c++})});
+  var mx=Math.max.apply(null,wk.map(function(x){return x.c}).concat([1]));
+  $("weeks").innerHTML=wk.map(function(x){return '<div><i style="height:'+(x.c/mx*80)+'px"></i>'+x.c+'<br>'+(x.d.getMonth()+1)+'/'+x.d.getDate()+'</div>'}).join("");
+  // history
+  var h=all.slice().reverse().map(function(s){
+    var ts=T.filter(function(t){return s.tests&&s.tests[t.k]}).map(function(t){var x=s.tests[t.k],er=E.filter(function(e){return x.err&&x.err[e[0]]}).map(function(e){return e[1].toLowerCase()+" "+x.err[e[0]]}).join(", ");return t.l+" "+x.in+"/"+x.out+(er?" ("+er+")":"")});
+    return '<div class="sess"><header><div><span class="tag">'+esc(s.type)+'</span><strong>'+esc(s.date)+'</strong> · '+s.mins+' min</div><span><button class="del" data-e="'+s.id+'">Edit</button> <button class="del" data-id="'+s.id+'">Delete</button></span></header>'+
+    ts.map(function(x){return '<div class="chips">'+esc(x)+'</div>'}).join("")+(s.longest?'<div class="chips">Longest rally: '+s.longest+' shots</div>':"")+
+    (s.fix?'<p><strong>Fix next:</strong> '+esc(s.fix)+'</p>':"")+(s.coach?'<p><strong>Coach:</strong> '+link(s.coach)+'</p>':"")+(s.notes?'<p>'+link(s.notes)+'</p>':"")+'</div>';
+  }).join("");
+  $("hist").innerHTML=h||'<p class="empty">No sessions yet. Log your first one above.</p>';
+  $("hist").querySelectorAll("[data-id]").forEach(function(b){b.onclick=function(){if(confirm("Delete this session?")){sessions=sessions.filter(function(s){return s.id!==+b.dataset.id});sv(KEY,sessions);render()}}});
+  $("hist").querySelectorAll("[data-e]").forEach(function(b){b.onclick=function(){startEdit(+b.dataset.e)}});
+}
+function startEdit(id){
+  var s=sessions.filter(function(x){return x.id===id})[0];if(!s)return;
+  clearForm();editing=id;$("date").value=s.date;$("mins").value=s.mins;$("type").value=s.type;$("longest").value=s.longest||"";$("fix").value=s.fix||"";$("coach").value=s.coach||"";$("notes").value=s.notes||"";
+  T.forEach(function(t){var x=s.tests&&s.tests[t.k];if(x){$("in_"+t.k).value=x.in;$("out_"+t.k).value=x.out;E.forEach(function(e){if(x.err&&x.err[e[0]])$(e[0]+"_"+t.k).value=x.err[e[0]]})}});
+  $("ftitle").textContent="Edit session";$("save").textContent="Update session";$("cancel").hidden=false;$("form").scrollIntoView({behavior:"smooth"});
+}
+$("cancel").onclick=clearForm;
+$("form").addEventListener("input",saveDraft);
+$("save").onclick=function(){
+  var m=parseInt($("mins").value,10)||0;if(m<=0){alert("Enter how many minutes you played.");return}
+  var tests={};
+  for(var i=0;i<T.length;i++){var t=T[i],a=$("in_"+t.k).value;if(a==="")continue;a=parseInt(a,10);var o=num("out_"+t.k),err={},sum=0;
+    if(o<1||a<0||a>o){alert(t.l+": balls in must be between 0 and the number of balls hit.");return}
+    E.forEach(function(e){var v=num(e[0]+"_"+t.k);err[e[0]]=v;sum+=v});
+    if(sum>o-a){alert(t.l+": your misses by type ("+sum+") add up to more than the "+(o-a)+" balls that missed.");return}
+    tests[t.k]={in:a,out:o,err:err}}
+  var rec={id:editing||Date.now(),date:$("date").value||today(),mins:m,type:$("type").value,tests:tests,longest:num("longest"),fix:$("fix").value.trim(),coach:$("coach").value.trim(),notes:$("notes").value.trim()};
+  if(editing)sessions=sessions.map(function(s){return s.id===editing?rec:s});else sessions.push(rec);
+  sv(KEY,sessions);clearForm();render();
+};
+$("exp").onclick=function(){var t=JSON.stringify({sessions:sessions,targets:targets});$("bk").value=t;$("bk").select();
+  try{navigator.clipboard.writeText(t).then(function(){$("bkmsg").textContent="Copied. Paste it somewhere safe."},function(){$("bkmsg").textContent="Select the text above and copy it."})}catch(e){$("bkmsg").textContent="Select the text above and copy it."}};
+$("imp").onclick=function(){
+  try{var o=JSON.parse($("bk").value);if(!o||!Array.isArray(o.sessions))throw 0;
+    var ids={};sessions.forEach(function(s){ids[s.id]=1});var add=0;
+    o.sessions.forEach(function(s){if(s&&s.id&&s.date&&!ids[s.id]){if(s.tests&&s.tests.Serve){s.tests.Serve1=s.tests.Serve;delete s.tests.Serve}sessions.push(s);add++}});
+    if(o.targets&&typeof o.targets==="object")T.forEach(function(t){if(typeof o.targets[t.k]==="number")targets[t.k]=o.targets[t.k]});
+    sv(KEY,sessions);sv(TK,targets);render();$("bkmsg").textContent="Restored "+add+" new sessions."
+  }catch(e){$("bkmsg").textContent="That text is not a valid backup."}
+};
+var LK="tennis-live-v1",L=ld(LK,null);
+if(!L||!L.c)L={cur:"Serve1",c:{},log:[]};
+function lsv(){sv(LK,L)}
+function ltot(k){var c=L.c[k];return c?c.in+c.net+c.long+c.wide:0}
+function renderLive(){
+  $("chips").innerHTML=T.map(function(t){return '<button type="button" class="cp" data-k="'+t.k+'" aria-pressed="'+(L.cur===t.k)+'">'+t.l+(ltot(t.k)?' ('+ltot(t.k)+')':'')+'</button>'}).join("");
+  $("chips").querySelectorAll(".cp").forEach(function(b){b.onclick=function(){L.cur=b.dataset.k;lsv();renderLive()}});
+  var c=L.c[L.cur]||{in:0,net:0,long:0,wide:0},n=ltot(L.cur),t=T.filter(function(x){return x.k===L.cur})[0];
+  $("livecount").innerHTML='<strong>'+t.l+':</strong> '+c.in+' in out of '+n+' balls'+(n?' ('+Math.round(100*c.in/n)+'%)':'')+(n?'<br><span class="hint">Net '+c.net+' · Long '+c.long+' · Wide '+c.wide+'</span>':'');
+}
+document.querySelectorAll(".big").forEach(function(b){b.onclick=function(){
+  var o=b.dataset.o;if(!L.c[L.cur])L.c[L.cur]={in:0,net:0,long:0,wide:0};L.c[L.cur][o]++;L.log.push({k:L.cur,o:o});lsv();renderLive();
+  try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
+}});
+$("lundo").onclick=function(){var x=L.log.pop();if(!x)return;L.c[x.k][x.o]--;L.cur=x.k;lsv();renderLive()};
+$("lclr").onclick=function(){if(confirm("Clear all court mode counts?")){L={cur:L.cur,c:{},log:[]};lsv();renderLive()}};
+$("lfin").onclick=function(){
+  var ks=T.filter(function(t){return ltot(t.k)>0});
+  if(!ks.length){$("livemsg").textContent="Tap a result after each ball first.";return}
+  if(editing)clearForm();
+  ks.forEach(function(t){var c=L.c[t.k];$("in_"+t.k).value=c.in;$("out_"+t.k).value=ltot(t.k);E.forEach(function(e){$(e[0]+"_"+t.k).value=c[e[0]]||""})});
+  L={cur:L.cur,c:{},log:[]};lsv();renderLive();saveDraft();
+  $("livemsg").textContent="Counts copied to the log below. Add your notes and press Save session.";
+  $("form").scrollIntoView({behavior:"smooth"});
+};
+buildTests();$("date").value=today();loadDraft();render();renderLive();
+</script>
+</body>
+</html>
